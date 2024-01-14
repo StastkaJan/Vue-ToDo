@@ -7,13 +7,22 @@
   justify-content: space-between;
 }
 
-#app>div {
-  max-width: 1280px;
-  margin: auto;
-}
-
 a {
   color: var(--prim-color);
   line-height: 0;
   text-decoration: none;
+}
+
+button {
+  margin: 0 .5em;
+  padding: .6em 1.2em;
+  color: var(--back-color);
+  background-color: var(--prim-color);
+  border: 1px solid var(--prim-color);
+}
+
+input {
+  padding: .6em 1.2em;
+  border: 1px solid var(--text-color);
+  border-radius: 0;
 }

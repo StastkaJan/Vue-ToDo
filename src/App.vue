@@ -14,9 +14,7 @@ import PageIcon from './components/icons/PageIcon.vue'
     </nav>
   </header>
 
-  <div>
-    <RouterView />
-  </div>
+  <RouterView />
 
   <footer>
     <p>&copy;{{ new Date().getFullYear() }} Jan Šťástka | By Jan Šťástka</p>

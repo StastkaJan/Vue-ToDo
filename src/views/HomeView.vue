@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onBeforeMount, watch } from 'vue'
 
 type taskListType = Array<{
   id: number
@@ -12,10 +12,15 @@ const taskList = ref<taskListType>([{
   name: 'Clean kitchen',
   completed: false
 }])
-
 let id = ref(2)
-
 let newTaskName = ref('')
+
+onBeforeMount(async () => {
+  const localData = localStorage.getItem('taskList')
+  if (localData == null) return
+  taskList.value = await JSON.parse(localData)
+  id.value = taskList.value[taskList.value.length - 1].id + 1
+})
 
 const addTask = () => {
   if (newTaskName.value.length < 1) return
@@ -29,6 +34,13 @@ const addTask = () => {
   id.value++
   newTaskName.value = ''
 }
+
+watch(
+  taskList,
+  () => {
+    localStorage.setItem('taskList', JSON.stringify(taskList.value))
+  },
+  { deep: true })
 </script>
 
 <template>
@@ -40,15 +52,25 @@ const addTask = () => {
       <button>Add</button>
     </form>
 
-    <ul>
+    <TransitionGroup tag="ul">
       <li v-for="{ id, name, completed } in taskList" :key="id" :class="{ complete: completed }">
         {{ name }}
       </li>
-    </ul>
+    </TransitionGroup>
   </main>
 </template>
 
 <style scoped>
+main {
+  max-width: 1280px;
+  min-height: 60vh;
+  margin: auto;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
 ul {
   padding: 0;
   list-style-type: none;
