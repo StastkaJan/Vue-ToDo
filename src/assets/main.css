@@ -17,6 +17,8 @@ button {
   color: var(--text-color);
   background-color: var(--back-color);
   border: 1px solid var(--back-color);
+  transition: .2s;
+  cursor: pointer;
 }
 
 button.block {

@@ -46,13 +46,22 @@ const deleteTask = (id: number) => {
   taskList.value = taskList.value.filter(val => val.id !== id)
 }
 
+const removeCompleted = () => {
+  taskList.value = taskList.value.filter(val => val.completed === false)
+}
+
+const completeAll = () => {
+  for (const item of taskList.value) {
+    item.completed = true
+  }
+}
+
 const completedTasks = computed(() =>
   taskList.value.filter(val => val.completed)
 )
 const nonCompletedTasks = computed(() =>
   taskList.value.filter(val => !val.completed)
 )
-
 watch(
   taskList,
   () => {
@@ -70,17 +79,26 @@ watch(
       <button class="block">Add</button>
     </form>
 
+    <div class="buttons">
+      <button @click="removeCompleted">
+        Remove completed
+      </button>
+      <button @click="completeAll">
+        Complete all
+      </button>
+    </div>
+
     <TransitionGroup name="list" tag="ul">
       <template v-for="list in [nonCompletedTasks, completedTasks]">
         <li v-for="{ id, name, completed } in list" :key="id" :class="{ complete: completed }">
           {{ name }}
           {{ completed ? '(complete)' : '' }}
           <div>
-            <button @click="() => completeTask(id)">
+            <button @click="completeTask(id)">
               <CheckIcon v-if="!completed" />
               <CrossIcon v-else />
             </button>
-            <button @click="() => deleteTask(id)">
+            <button @click="deleteTask(id)">
               <DeleteIcon />
             </button>
           </div>
@@ -101,10 +119,18 @@ form {
   margin-bottom: 20px;
 }
 
+button:hover {
+  box-shadow: 0 .2em .5em #ccc;
+}
+
 form button {
   color: var(--back-color);
   background-color: var(--prim-color);
   border: 1px solid var(--prim-color);
+}
+
+div.buttons {
+  margin-bottom: 20px;
 }
 
 ul {
@@ -116,6 +142,7 @@ li {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: .2em;
 }
 
 li.complete {
