@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeMount, watch } from 'vue'
-import CheckIcon from '@/components/icons/CheckIcon.vue'
-import CrossIcon from '@/components/icons/CrossIcon.vue'
-import DeleteIcon from '@/components/icons/DeleteIcon.vue'
+import { ref, onBeforeMount, watch } from 'vue'
 
-type taskListType = Array<{
-  id: number
-  name: string
-  completed: boolean
-}>
+import TodoList from '@/components/TodoList.vue'
+
+import type { taskListType } from '../types/listType'
 
 const taskList = ref<taskListType>([])
 let id = ref(2)
@@ -36,16 +31,6 @@ const addTask = () => {
   newTaskName.value = ''
 }
 
-const completeTask = (id: number) => {
-  for (const item of taskList.value) {
-    if (item.id === id) item.completed = !item.completed
-  }
-}
-
-const deleteTask = (id: number) => {
-  taskList.value = taskList.value.filter(val => val.id !== id)
-}
-
 const removeCompleted = () => {
   taskList.value = taskList.value.filter(val => val.completed === false)
 }
@@ -56,18 +41,13 @@ const completeAll = () => {
   }
 }
 
-const completedTasks = computed(() =>
-  taskList.value.filter(val => val.completed)
-)
-const nonCompletedTasks = computed(() =>
-  taskList.value.filter(val => !val.completed)
-)
 watch(
   taskList,
   () => {
     localStorage.setItem('taskList', JSON.stringify(taskList.value))
   },
-  { deep: true })
+  { deep: true }
+)
 </script>
 
 <template>
@@ -88,23 +68,7 @@ watch(
       </button>
     </div>
 
-    <TransitionGroup name="list" tag="ul">
-      <template v-for="list in [nonCompletedTasks, completedTasks]">
-        <li v-for="{ id, name, completed } in list" :key="id" :class="{ complete: completed }">
-          {{ name }}
-          {{ completed ? '(complete)' : '' }}
-          <div>
-            <button @click="completeTask(id)">
-              <CheckIcon v-if="!completed" />
-              <CrossIcon v-else />
-            </button>
-            <button @click="deleteTask(id)">
-              <DeleteIcon />
-            </button>
-          </div>
-        </li>
-      </template>
-    </TransitionGroup>
+    <TodoList v-model="taskList" />
   </main>
 </template>
 
@@ -131,33 +95,5 @@ form button {
 
 div.buttons {
   margin-bottom: 20px;
-}
-
-ul {
-  padding: 0;
-  list-style-type: none;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: .2em;
-}
-
-li.complete {
-  color: gray;
-}
-
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
-}
-
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
 }
 </style>
