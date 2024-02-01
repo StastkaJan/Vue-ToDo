@@ -14,7 +14,7 @@ defineEmits<{
 </script>
 
 <template>
-  {{ item.name }} {{ item.completed ? '(complete)' : '' }}
+  {{ item.name }} {{ item.completed ? '(completed)' : '' }}
   <div>
     <button @click="$emit('completeTask', item.id)">
       <CheckIcon v-if="!item.completed" />

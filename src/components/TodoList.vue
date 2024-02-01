@@ -5,23 +5,23 @@ import TodoItem from './TodoItem.vue'
 
 import type { taskListType } from '../types/listType'
 
-const props = defineModel<taskListType>()
+const model = defineModel<taskListType>()
 
 const completeTask = (id: number) => {
-  for (const item of props.value || []) {
+  for (const item of model.value || []) {
     if (item.id === id) item.completed = !item.completed
   }
 }
 
 const deleteTask = (id: number) => {
-  props.value = props.value?.filter(val => val.id !== id)
+  model.value = model.value?.filter(val => val.id !== id)
 }
 
 const completedTasks = computed(() =>
-  props.value?.filter(val => val.completed)
+  model.value?.filter(val => val.completed)
 )
 const nonCompletedTasks = computed(() =>
-  props.value?.filter(val => !val.completed)
+  model.value?.filter(val => !val.completed)
 )
 </script>
 
