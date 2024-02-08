@@ -16,11 +16,11 @@ defineEmits<{
 <template>
   {{ item.name }} {{ item.completed ? '(completed)' : '' }}
   <div>
-    <button @click="$emit('completeTask', item.id)">
+    <button @click="$emit('completeTask', item.id)" :aria-label="item.completed ? 'incomplete task' : 'complete task'">
       <CheckIcon v-if="!item.completed" />
       <CrossIcon v-else />
     </button>
-    <button @click="$emit('deleteTask', item.id)">
+    <button @click="$emit('deleteTask', item.id)" aria-label="delete task">
       <DeleteIcon />
     </button>
   </div>
