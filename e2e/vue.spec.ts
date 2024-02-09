@@ -11,7 +11,8 @@ test.describe('Todo list functionality', () => {
   })
 
   test('Add task', async ({ page }) => {
-    expect((await page.locator('ul > li:last-of-type').textContent())?.trim()).toBe('New task')
+    expect(await page.locator('ul > li').count()).toBe(1)
+    expect(await page.locator('ul > li:last-of-type').textContent()).toContain('New task')
   })
 
   test('Remove task', async ({ page }) => {
@@ -30,5 +31,11 @@ test.describe('Todo list functionality', () => {
     await page.waitForTimeout(550)
     expect(await page.locator('ul > li').count()).toBe(1)
     expect(await page.locator('ul > li').textContent()).toContain('New task 2')
+  })
+
+  test('Complete task', async ({ page }) => {
+    expect(await page.locator('ul > li').count()).toBe(1)
+    await page.locator('ul > li div > button:first-of-type').click()
+    expect(await page.locator('ul > li').textContent()).toContain('(completed)')
   })
 })
