@@ -20,4 +20,15 @@ test.describe('Todo list functionality', () => {
     await page.waitForTimeout(550)
     expect(await page.locator('ul > li').count()).toBe(0)
   })
+
+  test('Remove two tasks and remove the first one', async ({ page }) => {
+    expect(await page.locator('ul > li').count()).toBe(1)
+    await page.locator('form > input').fill('New task 2')
+    await page.locator('form > button').click()
+    expect(await page.locator('ul > li').count()).toBe(2)
+    await page.locator('ul > li:first-of-type div > button:last-of-type').click()
+    await page.waitForTimeout(550)
+    expect(await page.locator('ul > li').count()).toBe(1)
+    expect(await page.locator('ul > li').textContent()).toContain('New task 2')
+  })
 })
